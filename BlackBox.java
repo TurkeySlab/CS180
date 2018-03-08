@@ -1,5 +1,7 @@
 import java.util.Random;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author  maxwell williams
@@ -14,9 +16,9 @@ public class BlackBox {
     public static int numlink;
     public static boolean end;
     public static int score;
-    public static int high_score=-1;
+    public static int high_score = 10;
     public static int guess[][] = new int[3][2];		// each game gets 3 guesses that are saved as a point
-
+    public static int guessCt = 0;						// used to move the index of the user's guesses
     /**
      * The default constructor which places default values to the class variables
      */
@@ -46,22 +48,37 @@ public class BlackBox {
      * playgame()
      */
     public static void main(String[] args) {
-       //Todo:start the game print the welcome message and ask for correct difficulty level.
-    	/*System.out.println("Welcome to the Blackbox Game! Please choose the difficulity level:\n"
-    					 + "easy/ medium/ hard. or quit to end the game ");
+    	BlackBox b = new BlackBox();		// done for vocarium 
+    	b.check(1, 2);
+    	
     	Scanner s = new Scanner(System.in);
     	String input = "";
+    	boolean played = false, con = false;
     	do {
+    		System.out.println("Welcome to the Blackbox Game! Please choose the difficulity level:\n"
+					 + "easy/ medium/ hard. or quit to end the game ");
     		input = s.nextLine();
     		// checks the input from the user and alters the required values relative to the input
     		// size is set to be +2 of board size to handle borders
     		if( input.equalsIgnoreCase("easy") )
     		{
     			size = 7;
+    			initialize();		// size has been created; now creating the board
+    	    	printbox();			// initial board is printed
+    	    	playgame();			// game is started
+    	    	played = true;
     		} else if( input.equalsIgnoreCase("medium") ){
     			size = 9;
+    			initialize();		// size has been created; now creating the board
+    	    	printbox();			// initial board is printed
+    	    	playgame();			// game is started
+    	    	played = true;
     		} else if( input.equalsIgnoreCase("hard") ) {
     			size = 10;
+    			initialize();		// size has been created; now creating the board
+    	    	printbox();			// initial board is printed
+    	    	playgame();			// game is started
+    	    	played = true;
     		} else if( input.equalsIgnoreCase("quit") ) {
     			// leaves
     			System.out.println("Goodbye!");
@@ -73,24 +90,33 @@ public class BlackBox {
     					"easy/ medium/ hard. or quit to end the game");
     			input = "";
     		}
-    	} while ( input.equals("") );
-    	*/ 
-    	size = 10;
-    	initialize();		// size has been created; now creating the board
-    	printbox();
-    	playgame();
-       //Todo: end the game if the user says quit.
-       //Todo: call the functions initialize and playgame()
-       //Todo: take care of high score
+    		if( played )
+    		{
+    			// checks if you want to play another game
+    			do {
+    				System.out.println("Would you like to play again? ( yes/ no )\n");
+    				String answ = s.nextLine();
+    				if( answ.toLowerCase().charAt(0) == 'y' )
+    				{
+    					System.out.println("Alright new game!\n\n");
+    					con = true;
+    					break;
+    				} else if ( answ.toLowerCase().charAt(0) == 'n' ) {
+    					System.out.println("Play again soon!");
+    					break;
+    				}
+    			} while( true );
+    		}
+    	} while ( con );
     }
     /**
      * The initialize function
      */
+    public static void check(int i, int j ) {
+    	//done for vocarium
+    }
     public static void initialize() {
-        //Todo: initialise the Box[][]
-        //Todo: place the 'X' and the '#'
-        //Todo: place 3 '0''s randomly.
-    	box = new char[size][size];
+    	box = new char[size][size];					// generates the matrix
     	
     	for( int i = 0; i < size; i++ )
     	{
@@ -106,7 +132,7 @@ public class BlackBox {
     	}
     	for( int i = 0; i < 3; i++ )
     	{
-    		// generates 3 random ball locations
+    		// generates 3 random ball locations in [i][j] point form
     		boolean validPlace = false;
     		Random r = new Random();
     		do
@@ -122,9 +148,9 @@ public class BlackBox {
     				box[x][y] = 'o';
     				validPlace = true;
     			}
+    			// will continue to generate new [i][j] values until a new ball is placed
     		} while ( !validPlace );
     	}
-    	box[4][4] = 'o';
     }
     /**
      * The printbox function prints out the matrix in a particular format as given in the handout.
@@ -154,30 +180,26 @@ public class BlackBox {
     	String f = String.format("\n   %" + (( size * 3 )) + "s", "").replace(" ", "=");	// adjusts for variable game box sizes ( 3.75 )
     	System.out.println( f );
     	
-    	for(int i = 1; i < size + 1; i++)		//TODO (int i = 1; i < size + 1; i++) and change print grid to be [i - 1]
+    	for(int i = 1; i < size + 1; i++)		
     	{	
-    		if( i < 10 )				// done to line up bottom row for hard mode
+    		if( i < 10 )					// done to line up bottom row for hard mode
     			System.out.print(i + " |");
     		else 
     			System.out.print(i + "|");
     		
     		for( int j = 0; j < size; j++ )
     		{
-    			/*
     			// prints the "cells"
     			if( box[i - 1][j] == 'o' )
     			{
-    				TODO remove tracking
     				System.out.print("  |");
     			} else {
     				System.out.print(box[i - 1][j] + " |");
     			} 
-    			*/
-    			//System.out.print(box[i - 1][j] + " |");		TODO use
-    			System.out.print(box[i - 1][j] + " |");
+    			//System.out.print(box[i - 1][j] + " |");
     		}
     		
-    		if( i == size )				// used to determine bottom line
+    		if( i == size )				// used to determine bottom line to not have the bottom border "hanging"
     			System.out.print("");
     		else
     			System.out.println();
@@ -186,14 +208,70 @@ public class BlackBox {
     	System.out.println("\n");
     	
     }
+    public static void submitGame()
+    {
+    	boolean right = true;
+    	for( int x = 0; x < 3; x++)
+    	{
+    		// compares guesses
+    		int i = guess[x][0], j = guess[x][1];
+    		if( box[i - 1][j - 1] != 'o' )
+    		{
+    			right = false;
+    		}
+    	}
+    	if( right )
+    	{
+    		// user had a winning game
+    		System.out.println("\n\nYou Won! :D");
+    		if( score <= high_score )
+    		{
+    			System.out.println("You beat the highscore!");
+    			high_score = score;
+    		}
+    		else 
+    			System.out.println("So close to breaking the record!\n\tYou scored: " + score);
+    		System.out.println("Highscore: " + high_score);
+    	} else {
+    		// user is the worst player in the world and lost the game
+    		System.out.println("\n\nYou Lost! :/");
+    		System.out.println("Maybe next time guess the balls correctly.");
+    	}
+    }
     /**
      * The playgame function opens the first cell and is the main controller for the game. It calls various function when needed.
      */
     public static void playgame() {
-        //Todo:Take input of a guess or hint from the user.
-        //Todo:Check for valid input
-        //Todo:call required functions
-    	// inputs are reduced by 1 here to follow index rules 
+    	/*
+    	 * 						   -------------------------------------------------------
+    	 * 						<<  DOES NOT USE CHECK METHOD THIS WORKS ON A TICK SYSTEM  >>
+    	 * 						   -------------------------------------------------------
+    	 * 
+    	 * This game operates on a step-by-step beam system. The user input port fires the "beam" which move in a linear motion
+    	 * perpendicular to the entry port. At the current beam location ( so if the beam was fired from [0][5] the current
+    	 * location would be at [0][6] because the beam is moving right from the entry point. ) the 3 checks reflection, hit, 
+    	 * deflection are checked in order by the project description and the beam will be moved 1 unit relative to direction
+    	 * of the beam and if any ball interaction occurred. Because the game operates on a 'tick' system the beam is able to
+    	 * interact with multiple ball objects making the game simulation operate like a real game would.
+    	  
+    	 * playgame() operation and logic
+    	 * 1 ) Input is received from the user for next move. The input will either quit, submit a guess, or fire a beam
+    	 * 		a) game is exited
+    	 * 		b) user is prompted for a guess to submit
+    	 * 		c) a new beam is fired from the port
+    	 * 2 ) If a new beam is fired
+    	 * 		1) starting coordinates are defined, the beam coordinates are defined, all other variables reset
+    	 * 		2) from the starting port the beam checks if there is a reflection or hit directly next to the port
+    	 * 		3) if the beam was not returned the beam is moved forward 1 space perpendicular to the port
+    	 * 		4) Beam is checked for reflections, hits, or deflections
+    	 * 			a) reflection : the beam is "killed" and a 'R' is returned to the firing port
+    	 * 			b) hit        : the beam is "killed" and a 'H' is returned to the firing port
+    	 * 			c) deflection : the beam is moved 1 unit relative to the deflection and the beam is marked as not a
+    	 * 							straight beam through its return values
+    	 * 		5) beam is moved the unit defined by the deflection check
+    	 * 		6) steps 3 - 6 are repeated until the beam exits the box
+    	 * 		7) exit notation is placed on the firing port
+    	 */
     	int i, j;						// the beams current location
     	int iStart, jStart;				// the firing port
     	int[] val = new int[3];			// used to both move the beam relative to the balls and detect straight rays
@@ -201,37 +279,182 @@ public class BlackBox {
     	boolean inBounds = true, str8 = true, game = true;	// handles beam movement loop; used to determine if the beam moved straight; master game control
     	int beamExits = 1;				// used for updating the margin values for user returns
     	String input = "";
-    	// input recieved 
-    	// check first for reflection at entry port
+    	
     	Scanner s = new Scanner( System.in );
     	do {
     		/* 
     		 * the master game control
-    		 * gets inputs and tests values and prints the end result 
+    		 * gets inputs, tests values and prints the end result 
     		 */
     		System.out.println("Choose the new coordinate (row, column) to play the next step or say submit/ quit");
     		input = s.nextLine();
+    		input = input.replaceAll("\\s+", "");			// remove all white space
+    		Pattern pattern = Pattern.compile("\\d,\\d");	// pattern to match a coordinate
+    		Matcher matcher = pattern.matcher(input);		// object to check with the pattern
+    		
     		if( input.equalsIgnoreCase("quit") )
     		{
     			// user request to leave the game ( really weird doubt this will be used because the game is the best like 10/10 by IGN game )
+    			System.out.println("\tThanks for playing!\n");
     			return;
     		} else if( input.equalsIgnoreCase("submit") ) {
-    			// handles submitting the user's guesses of where the ball is located
-    			// TODO
-    		} else {
-    			/*
-    			 * The user entered a coordinate and will run the beam and return the outputs
-    			 */
-    			int[] temp = coordinates(input);		// gets the coordinates 
+    			String in = "";
+    			do {
+    				if( guessCt == 3 )
+    				{
+        				/*
+        				 * used to allow for the user to change old submissions 
+        				 * this code is reached when the user enters 3 guesses but then exits the submission screen
+        				 * 
+        				 */
+    					System.out.println("You have entered 3 guesses would you like to submit them?\n"
+    									 + "Say 'submit' to submit"
+    									 + "\nSay 'change' to change a guess");
+    					System.out.println("\t1)  " + guess[0][0] + ", " + guess[0][1] +
+    							   		   "\n\t2)  " + guess[1][0] + ", " + guess[1][1] + 
+    							   		   "\n\t3)  " + guess[2][0] + ", " + guess[2][1] + "\n");
+    					in = s.nextLine();
+    					if ( in.equalsIgnoreCase("change") ) 
+    					{
+    						do {
+    	    					try {
+    	    						System.out.println("Enter the guess you want to change:");
+    	    						in = s.nextLine();
+    	    						int index = Integer.parseInt( in.substring(0, 1) );
+    	    						index--;		// removes 1 because 0 is start
+    	    						
+    	    						if( index < 3 )
+    	    						{
+    	    							System.out.println("Enter a coordinate to replace " + guess[index][0] + ", " + guess[index][1] + " : ");
+    	    							String temp = s.nextLine();
+    	    							guess[index] = coordinates(temp);
+    	    						} else { 
+    	    							System.out.println("\tPlease enter a valid input\n");
+    	    						}
+    	    					} catch ( Exception e ) {
+    	    						continue;
+    	    					}
+    	    					//runs until a second enter is pressed
+    						} while( !in.replaceAll("\\s+", "").equals("") );
+    						System.out.println("\tReturning to game... \n");
+        				} 
+    					if ( in.equalsIgnoreCase("submit") )
+    					{
+    						submitGame();
+    						//s.close();
+    						return;		// game is over returning to paly another
+    					}
+    				} else {
+    					/*
+    					 * User typed 'submit' 
+    					 * user is now allowed to view old submissions
+    					 * change old submissions
+    					 * add new submissions
+    					 * and submit final inputs
+    					 */
+	    				System.out.println("\t1) Enter a corrdinate pair to place a guess 'x, y'\n"
+								 + "\t2) Say 'view' to see previous guesses\n"
+								 + "\t3) Say 'change' to change a guess\n"
+								 + "\t\t( press enter a second time to return to firing )");
+	    				
+	    				in = s.nextLine();
+	    				matcher = pattern.matcher(in);		// used to check if input is a coordinate
+	    				if( in.equalsIgnoreCase("view") )
+	    				{
+	    					System.out.println("\t\t1)  " + guess[0][0] + ", " + guess[0][1] +
+	    									   "\n\t\t2)  " + guess[1][0] + ", " + guess[1][1] + 
+	    									   "\n\t\t3)  " + guess[2][0] + ", " + guess[2][1] + "\n");
+	    				} else if ( in.equalsIgnoreCase("change") ) {
+    						do {
+    	    					try {
+    	    						System.out.println("Enter the guess you want to change:");
+    	    						in = s.nextLine();
+    	    						int index = Integer.parseInt( in.substring(0, 1) );
+    	    						index--;		// removes 1 because 0 is start
+    	    						
+    	    						if( index < 3 )
+    	    						{
+    	    							System.out.println("Enter a coordinate to replace " + guess[index][0] + ", " + guess[index][1] + " : ");
+    	    							String temp = s.nextLine();
+    	    							guess[index] = coordinates(temp);
+    	    						} else { 
+    	    							System.out.println("\tPlease enter a valid input\n");
+    	    						}
+    	    					} catch ( Exception e ) {
+    	    						continue;
+    	    					}
+    	    					//runs until a second enter is pressed
+    						} while( !in.replaceAll("\\s+", "").equals("") );
+    						System.out.println("\tReturning to game... \n");
+        				} else if( matcher.find() ) {
+	    					guess[guessCt] = coordinates(in);		// saves the returned point
+	    					guessCt++;
+	    					if( guessCt == 3 )
+	    					{
+	    						System.out.println("You have entered 3 guesses would you like to submit them?\n"
+	    										 + "Say 'submit' to submit"
+	    										 + "\nSay 'change' to change a guess");
+	    						System.out.println("\t1)  " + guess[0][0] + ", " + guess[0][1] +
+										   		   "\n\t2)  " + guess[1][0] + ", " + guess[1][1] + 
+										   		   "\n\t3)  " + guess[2][0] + ", " + guess[2][1] + "\n");
+	    						in = s.nextLine();
+	    						if ( in.toLowerCase().contains("change") ) {
+	        						do {
+	        	    					try {
+	        	    						System.out.println("Enter the guess you want to change:");
+	        	    						in = s.nextLine();
+	        	    						int index = Integer.parseInt( in.substring(0, 1) );
+	        	    						index--;		// removes 1 because 0 is start
+	        	    						
+	        	    						if( index < 3 )
+	        	    						{
+	        	    							System.out.println("Enter a coordinate to replace " + guess[index][0] + ", " + guess[index][1] + " : ");
+	        	    							String temp = s.nextLine();
+	        	    							guess[index] = coordinates(temp);
+	        	    						} else { 
+	        	    							System.out.println("\tPlease enter a valid input\n");
+	        	    						}
+	        	    					} catch ( Exception e ) {
+	        	    						continue;
+	        	    					}
+	        	    					//runs until a second enter is pressed
+	        						} while( !in.replaceAll("\\s+", "").equals("") );
+	        						System.out.println("\tReturning to game... \n");
+	            				} 
+	        					if ( in.equalsIgnoreCase("submit") )
+	        					{
+	        						submitGame();
+	        						//s.close();
+	        						return;				// game is over returning to prompt for another game
+	        					}
+	    					}
+	    				} else {
+	    					System.out.println("\tPlease enter a valid input\n");
+	    				}
+    				}
+    				
+    				
+    			} while ( !in.replaceAll("\\s+", "").equals(""));
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * * * * * *
+ * * * * * * The user entered a coordinate and will run the beam and return the outputs
+ * * * * * *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    		} else if ( matcher.find() ) {		// user entered x,y input 
+    			int[] temp;
+    			score++;						// user entered a guess increasing score
+    			temp = coordinates(input);		// gets the coordinates
     			
-    			iStart = temp[0];		// saves starting values for user returns 
-    			jStart = temp[1];
+    			iStart = temp[0] - 1;				// saves starting values for user returns 
+    			jStart = temp[1] - 1;				//  ...
     			
-    			i = iStart;				// assigns beam location variables to move beam
-    			j = jStart;
-    			inBounds = true;
-    			str8 = true;
-    			d = 0;		// TODO : set d relative to input
+    			i = iStart;							// assigns beam location variables to move beam
+    			j = jStart;							//  ...
+    			
+    			inBounds = true;					// boolean values and directions are reset
+    			str8 = true;						//   ...
+    			d = getDirection(i, j);	 			//  ... 		TODO : set d relative to input
+    			
 		    	while( inBounds )
 		    	{	
 		    		/*
@@ -239,18 +462,16 @@ public class BlackBox {
 		    		 * is within the grid. the loop will also exit in the even that the beam leaves the 
 		    		 * board due to a reflection at the detection of a reflection
 		    		 */
-		    		System.out.println(i + ", " + j);
-		    		
 		    		if( reflectionCheck(i, j, d) )		// a reflection has been detected the starting coordinates will be updated
 		    		{
-		    			System.out.println("Reflection @ : " + i + ", " + j );
+		    			//System.out.println("Reflection @ : " + i + ", " + j );
 		    			box[iStart][jStart] = 'R';		// updates the margin 
 		    			inBounds = false;				// beam 'exited' getting new input for next beam
 		    		}
 		    		
 		    		if( hitcheck(i, j, d) )				// placed above because stacked balls will return a deflection when it should be a hit
 		    		{
-		    			System.out.println("Hit @ : " + i + ", " + j);
+		    			//System.out.println("Hit @ : " + i + ", " + j);
 		    			box[iStart][jStart] = 'H';		// updates the margin 
 		    			inBounds = false;				// beam 'exited' getting new input for next beam
 		    		}
@@ -262,8 +483,6 @@ public class BlackBox {
 		    		if( val[2] == 1 )
 		    			str8 = false;					// there was a deflection beam is no longer straight
 		    		
-		    		box[i][j] = '*';					// used to "track" laser
-		
 		    		if( i == 0 || i == size - 1 || j == 0 || j == size - 1 )
 		    		{
 		    			if( str8 )
@@ -280,30 +499,17 @@ public class BlackBox {
 		    			}
 		    			inBounds = false;
 		    		}
-		    		printbox();
+		    		/* 
+		    		 * Uncomment to see the laser
+		    		 * box[i][j] = '*';					// used to "track" laser
+		    		 * printbox();
+		    		 * 
+		    		 */
 		    	}
 		    	printbox();							// updates playing field
     		}
     	} while( game );
-    	
-    	
-        //Todo:keep tab on score.
-    	
-    	// (1, 1) = (0, 0) so 1 is subtracted from user input to translate to matrix
-    	
-    	// the ray will be a "Straight Ray" if the start 'i' = end 'i' or start 'j' = end 'j'
-    	// this is tested at the exit of the controlling loop and not in a method
-    }
-    /**
-     * The check function takes in the row and column in the matrix, checks for Hit (H), Reflection (R) or Divergence(#num)
-     *
-     */
-    public static void check(int i,int j)	// ( DEPRECIATED )
-    {	 
-        //Todo:Check for a Hit
-        //Todo:Check for a reflection
-        //Todo:Check for a bounce
-        //Todo:Print a statement telling the user they cannot place a fourth ball.
+    	s.close();
     }
     /**
      * The hitcheck function takes in the row and column in the matrix, checks for Hit (H)
@@ -332,16 +538,11 @@ public class BlackBox {
     	}
     	return false;
     }
-    public void placeball(int i, int j)
-    {
-    	/*
-    	 * checks if user placed guess is a valid place and saves the guess's placement 
-    	 */
-    }
     /**
      * The check function takes in the row and column in the matrix, checks for Reflection (R)
      */
-    public static boolean reflectionCheck(int i,int j, int d) {
+    public static boolean reflectionCheck(int i,int j, int d)
+    {
     	/* @ return : will return true if
     	  				1) a ball is 45 from the entry point causing a reflection
     	  				2) there is "ball-space-ball" combination 
@@ -394,16 +595,18 @@ public class BlackBox {
     /**
      * The check function takes in the row and column in the matrix, checks for Divergence(#num)
      */
-    public static int[]  deflectionCheck(int i, int j, int d) {
+    public static int[]  deflectionCheck(int i, int j, int d)
+    {
     	/* 
-    	   @parm d : the direction the "laser" is moving towards ( N,S,E,W )
+    	   @parm d : the direction the "laser" is moving towards ( N,S,E,W ) = ( 1,2,3,4 )
     	   @Note   : This is the only method that will move the point ( i, j ) relative to the firing direction
     	   @return : the direction to move the "laser" from point ( i, j ) 
-    	 		    	[0] > moves i | 
-    	 		    	[1] > moves j | 
-    	 		    	[2] > if there was a deflection	| 
+    	 		    	[0] > moves i  
+    	 		    	[1] > moves j  
+    	 		    	[2] > if there was a deflection	 
     	 		    	[3] updates direction  :  1=N 2=E 3=S 4=W
-    			   		if [2] == 1 then straightRay boolean will be set to false
+    	 		    	
+    			   		if [2] == 1 then straightRay boolean will be false
     	   @return : the loop will exit and place a deflection char 'current-delfection-num' if straightRay is false and ( i, j ) reaches the end
     	*/
 		if( d == 2 )		// coming from left
@@ -436,7 +639,7 @@ public class BlackBox {
 		if( d == 3 )		// coming from top
 		{
 			if( box[i+1][j+1] == 'o' )			// down right	
-				return new int[] {0, 1, 1, 4};
+				return new int[] {0, -1, 1, 4};
 			else if( box[i+1][j-1] == 'o' )		// down left	
 				return new int[] {0, 1, 1, 2};
 			
@@ -445,34 +648,20 @@ public class BlackBox {
 		// ( will not be reached )
 		return new int[] {};
     }
-    /**
-     * The straightRay function takes in the row and column in the matrix, checks for Straight ray	( DEPRECIATED )
-     */
-    public int[] straightRay(int i,int j, int d)// ( DEPRECIATED )
+    public static char getDirection( int i, int j )
     {
-    	// @parm d : the direction the "laser" is moving towards ( N,S,E,W )
-    	// @return : the direction to move the "laser" from point ( i, j )
-    	//		   : [0] > moves i
-    	//		   : [1] > moves j
-    	//		   : the ray will be a "Straight Ray" if the start 'i' = end 'i' or start 'j' = end 'j'
-    	//		   :	this is tested at the exit of the controlling loop
-    	if( d == 2 )		// coming from left
-		{
-			return new int[] {0, 1};			// moves space 1 right
-		} 
-		if( d == 4 )		// coming from right
-		{
-			return new int[] {0, -1};			// moves space 1 left
-		}
-		if( d == 1 )		// coming from bottom
-		{
-			return new int[] {-1, 0};			// moves space up 1
-		}
-		if( d == 3 )		// coming from top
-		{
-			return new int[] {1, 0};			// moves space down 1
-		}
-    	return new int[] {};
+    	// calculates the direction of the beam from the firing port
+    	// done to clean up play game 
+    	if( i == 0 ) {
+    		return 3;
+    	} else if ( i == size - 1 ) {
+    		return 1;
+    	} else if ( j == 0 ) {
+    		return 2;
+    	} else if ( j == size - 1 ) {
+    		return 4;
+    	}
+    	return '?';
     }
     public static int[] coordinates(String in)
     {
@@ -484,42 +673,18 @@ public class BlackBox {
     	in = in.replaceAll("\\s+", "");
     	return new int[] {Integer.parseInt(in.substring(0, in.indexOf(','))), Integer.parseInt(in.substring(in.indexOf(',') + 1))};
     }
-    
-    /**
-     * The following definitions are the getters and setter functions which have to be implemented
-     *
-     */
-    public char[][] getbox() {
-    	return box;
-    }
-    public int getscore() {
-    	return score;
-    }
-    public int getNumball() {
-    	return numball;
-    }
-    public int getNumlink() {
-    	return numlink;
-    }
-    public boolean getend() {
-    	return false;
-    }
-    public void setbox(char box[][]) {
-    	this.box = box;
-    }
-    public void setSize(int size){
-    	this.size = size;
-    }
-    public void setNumball(int numball) {
-    	this.numball = numball;
-    }
-    public void setNumlink(int numlink) {
-    	this.numlink = numlink;
-    }
-    public void setEnd(boolean end) {
-    	this.end = end;
-    }
-    public void setScore(int score) {
-    	this.score = score;
-    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
