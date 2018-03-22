@@ -39,12 +39,12 @@ public class Student implements Person {
     	else
     		this.gender = gender;
     	
-    	this.id = getID();
+    	this.id = this.nextID;
+    	this.nextID++;
     }
     public int getID() 
     {
-    	nextID += 1;
-        return nextID;
+        return this.id;
     }
     public void setName(String name)
     {

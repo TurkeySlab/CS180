@@ -1,3 +1,5 @@
+import java.io.Serializable;
+
 /**
  * Program Name
  *
@@ -9,7 +11,7 @@
  *
  */
 
-public class Teacher implements Person {
+public class Teacher implements Person, Serializable {
     /**
      * Static variable used to determine the next ID number
      */

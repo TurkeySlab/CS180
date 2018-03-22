@@ -20,7 +20,7 @@ public class College {
      * Maximum number of Professors allowed to be hired by a College
      */
     protected static final int MAX_PROFESSORS = 5;
-
+    
     /**
      * Maximum number of Teachers allowed to be hired by a College
      */
@@ -64,10 +64,9 @@ public class College {
          *
          * @param course A course object to be added to the College's array of courses.
          */
-    	int i = 0;
-    	for(;i < this.courses.length; i++)
+    	for( int i = 0; i < this.courses.length; i++)
     	{
-    		if( this.courses[i] == null )		// find the last avaible slot in the courses	
+    		if( this.courses[i] == null )		// find the last open slot in the courses	
     		{
     			this.courses[i] = course;
     		}
@@ -152,72 +151,161 @@ public class College {
          * Removes student from the College's array of Students. If the student is enrolled in any Courses, they should be
          * removed from these courses. If student is null or the student is not currently enrolled, nothing changes.
          *
-         * *HINT* If you try to remove a student from a Course, an exception is thrown. Consider using a try-catch block.
-         *
          * @param student Student to be removed from the College's array of students
          */
+    	if( student == null )
+    	{
+    		return;
+    	}
+    	
+    	// removes student from courses
+    	for( int i = 0; i < this.courses.length; i ++)
+    	{
+			try {
+				// attempts to drop the student from the course
+				this.courses[i].dropStudent(student);
+			} catch (DropFromCourseException e) {
+				continue;
+				// nothing will be done if student is unable to be removed 
+				// because that means the student is not in the course
+			}
+    	}
+    	// removes student from the course list 
+    	for( int i = 0; i < this.students.length; i ++ )
+    	{
+	    	if(this.students[i].equals(student))
+			{
+				this.students[i] = null;		// removes the course
+				
+				// shifts the array to have null be at the end for data consistency
+				while( i < this.students.length - 1 )
+				{
+					this.students[i] = this.students[i + 1];
+					i++; 
+				}
+				this.students[this.students.length - 1] = null;	// null value is moved to the end
+				return;		// student has been removed
+			}
+    	}
     }
-
-    /**
-     * Returns the net change in the colleges budget. Tuition per student will increase the net change, and payments for
-     * Professors and Teachers according to both their base and per course salaries will decrease the net change.
-     *
-     * @return Net change in the College's funds
-     */
     public int calculateNetBudgetChange() {
-        //TODO: Calculate the change in budget (Total tuition - Professor Salaries - Teacher Salaries)
-        return 0;
-    }
+    	/**
+         * Returns the net change in the colleges budget. Tuition per student will increase the net change, and payments for
+         * Professors and Teachers according to both their base and per course salaries will decrease the net change.
+         *
+         * @return Net change in the College's funds
+         */
+    	int net = 0;
+    	
+    	// calculates the per course costs for teachers and professors
+    	for( int i = 0; i < this.teachers.length; i++ )
+    	{
+    		// this loop gets the teachers
+    		for( int c = 0; c < this.courses.length; c++)
+    		{
+    			// this loop gets each course to be compared
+	    		for( int j = 0; j < this.courses[c].getTeachers().length; j++)
+	    		{
+	    			// this loop gets the teachers of the course
+	    			if( this.teachers[i].equals(this.courses[c].getTeachers()[j]) ) 
+	    			{
+	    				// adds the teacher's per course salary for each course they teach
+	    				net += this.teachers[i].getPerCourseSalary();	
+	    			}
+	    		}
+    		}
+    		// adds the teacher's base salary 
+    		net -= this.teachers[i].getBaseSalary();
+    	}
+    	for( int i = 0; i < this.professors.length; i++ )
+    	{
+    		// this loop gets the teachers
+    		for( int c = 0; c < this.courses.length; c++)
+    		{
+    			// this loop gets each course to be compared
+    			if( this.teachers[i].equals(this.courses[c].getProfessor()) ) 
+    			{
+    				// adds the teacher's per course salary for each course they teach
+    				net -= this.professors[i].getPerCourseSalary();	
+    			}
+    		}
+    		// adds the teacher's base salary 
+    		net -= this.professors[i].getBaseSalary();
+    	}
+    	int i = 0;
+    	// gets the total number of enrolled students
+    	for( ; i < this.students.length; i++ )
+    	{
+    		if( this.students[i] == null )
+    		{
+    			// if there are no more students enrolled
+    			break;
+    		}
+    	}
+    	// adds the profit from tuition
+    	net += ( i * this.getTuition() );
 
-    /**
-     * @return A reference to the array of courses offered by this College.
-     */
+    	return net;
+    }
     public Course[] getCourses()
     {
-        //TODO: Return the array of Courses.
-        return null;
+    	/**
+         * @return A reference to the array of courses offered by this College.
+         */
+    	return this.courses;
     }
-
-    /**
-     * @return A reference to the array of Teachers employed by this College.
-     */
     public Teacher[] getTeachers()
     {
-        //TODO: Return the array of Teachers
-        return null;
+    	/**
+         * @return A reference to the array of Teachers employed by this College.
+         */
+        return this.teachers;
     }
-
-    /**
-     * @return A reference to the array of Professors employed by this College.
-     */
     public Professor[] getProfessors()
     {
-        //TODO: Return the array of Professors
-        return null;
+    	/**
+         * @return A reference to the array of Professors employed by this College.
+         */
+    	return this.professors;
     }
-
-    /**
-     * @return A reference to the array of Students enrolled at this College.
-     */
     public Student[] getStudents()
     {
-        //TODO: Return the array of Professors
-        return null;
+    	/**
+         * @return A reference to the array of Students enrolled at this College.
+         */
+    	return this.students;
     }
-
-    /**
-     * @return The name of the College object
-     */
-    public String getName() {
-        //TODO: Return the name of the College object
-        return null;
+    public String getName() 
+    {
+    	/**
+         * @return The name of the College object
+         */
+    	return this.name;
     }
-
-    /**
-     * @return The tuition charged per student
-     */
-    public int getTuition() {
-        //TODO: Return the tuition of the College object
-        return 0; // I wish
+    public int getTuition()
+    {
+    	/**
+         * @return The tuition charged per student
+         */
+    	return this.tuition; 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

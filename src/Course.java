@@ -70,7 +70,7 @@ public class Course {
     	}
     	this.students[i] = student;
     }
-    public void dropStudent(Student student)throws DropFromCourseException
+    public void dropStudent(Student student) throws DropFromCourseException
     {
     	/**
          * Removes student from the course. Throws DropFromCourseException if student is null or if the student
@@ -79,12 +79,16 @@ public class Course {
          * @param student Student to be removed from the course
          * @throws DropFromCourseException If student is null or if the student is not enrolled in the course.
          */
-    	if(student.equals(null))
+    	if(student == null)
     	{
     		throw new DropFromCourseException("Student must not be null");
     	}
     	for(int i = 0; i < this.students.length; i++)
     	{
+    		if(this.students[i] == null)
+    		{
+        		throw new DropFromCourseException("Student must not be null");
+    		}
     		if(this.students[i].equals(student))
     		{
     			this.students[i] = null;		// removes the course
@@ -150,12 +154,16 @@ public class Course {
          * @param teacher Teacher to be added to the Course
          * @throws DropFromCourseException if teacher is null or if teacher is not found.
          */
-    	if(teacher.equals(null))
+    	if(teacher == null)
     	{
     		throw new DropFromCourseException("Teacher must not be null");
     	}
     	for(int i = 0; i < this.students.length; i++)
     	{
+    		if(this.teachers[i] == null )
+    		{
+        		throw new DropFromCourseException("Student must not be null");
+    		}
     		if(this.teachers[i].equals(teacher))
     		{
     			this.teachers[i] = null;						// removes the teacher
@@ -240,6 +248,7 @@ public class Course {
          *
          * @param professor Reference to Professor object to be made the lead Professor of the course.
          */
+    	this.professor.dropCourse(this);
     	this.professor = professor;
     }
 

@@ -1,14 +1,22 @@
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 
 public class test {
-	public static void main( String args[] )
+	public static void main( String args[] ) throws IOException
 	{
-		Teacher t = new Teacher("egg", 100000, "eh");
-		Teacher t1 = t;
+		Course c = new Course("yea", new Professor("a", 1000, "j"));
 		
-		System.out.println(t.getID());
-		System.out.println(t1.getID());
-		
-	
+		try {
+			c.dropStudent(null);
+		} catch (DropFromCourseException e) {
+			// TODO Auto-generated catch block
+			System.out.println("j");
+		}
 	
 	}
 }

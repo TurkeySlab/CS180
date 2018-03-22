@@ -1,12 +1,10 @@
-import org.junit.*;
-
-import static org.junit.Assert.*;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import junit.framework.Test;
 
 public class Project3StudentTestCases {
     static String NAMES[]={"Josue","Sherrill","Genna","Debroah","Arielle",
