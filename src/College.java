@@ -69,14 +69,15 @@ public class College {
     		
     	for( int i = 0; i < this.courses.length; i++)
     	{
+    		if( this.courses[i] == null )		// find the last open slot in the courses	
+    		{
+    			this.courses[i] = course;
+    			break;
+    		}
     		if( this.courses[i].getName().equals(course.getName()))
     		{
     			// can't add duplicates
     			return;
-    		}
-    		if( this.courses[i] == null )		// find the last open slot in the courses	
-    		{
-    			this.courses[i] = course;
     		}
     	}
     	// if there is no room nothing happens
@@ -94,13 +95,14 @@ public class College {
     		
     	for(int i = 0; i < this.professors.length; i++ )
     	{
-    		if( this.professors[i].getID() == professor.getID())
-    		{
-    			return;										// professor already exits 
-    		}
     		if( this.professors[i] == null )
     		{
     			this.professors[i] = professor;				// adds the professor
+    			break;
+    		}
+    		if( this.professors[i].getID() == professor.getID())
+    		{
+    			return;										// professor already exits 
     		}
     	}
     	// the College can not hire more professors
@@ -120,11 +122,16 @@ public class College {
     	{
     		if( this.teachers[i].getID() == teacher.getID() )
     		{
-    			return;										// teacher already exits 
+    			return;		// cant add dup
     		}
     		if( this.teachers[i] == null )
     		{
     			this.teachers[i] = teacher;				// adds the teacher
+    			break;
+    		}
+    		if( this.teachers[i].getID() == teacher.getID() )
+    		{
+    			return;										// teacher already exits 
     		}
     	}
     	// the College can not hire more professors
@@ -142,13 +149,14 @@ public class College {
     		
     	for(int i = 0; i < this.students.length; i++ )
     	{
-    		if( this.students[i].getID() == student.getID() )
-    		{
-    			return;										// student already exits 
-    		}
     		if( this.students[i] == null )
     		{
     			this.students[i] = student;					// adds the student
+    			break;
+    		}
+    		if( this.students[i].getID() == student.getID() )
+    		{
+    			return;										// student already exits 
     		}
     	}
     	// the College can not enroll more students

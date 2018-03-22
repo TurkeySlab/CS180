@@ -250,6 +250,7 @@ public class Course {
          */
     	if( professor == null )
     		return;
+    	
     	this.professor.dropCourse(this);
     	this.professor = professor;
     }

@@ -178,6 +178,8 @@ public class Teacher implements Person, Serializable {
     	int count = 0;
     	while( i < this.courses.length )
     	{
+    		if( this.courses == null )
+    			break;
     		if( this.courses[i].getName().equals(course) )
     			count++;
     		i++;
