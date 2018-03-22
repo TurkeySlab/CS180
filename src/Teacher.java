@@ -128,6 +128,9 @@ public class Teacher implements Person, Serializable {
     	/* removes the given course from the list
     	 * If there are multiple courses : then the first occurrence is removed
     	 */
+    	if( course == null )
+    		return false;
+    	
     	int i = 0;
     	while( i < this.courses.length )
     	{
@@ -168,6 +171,9 @@ public class Teacher implements Person, Serializable {
          * @param course Course being confirmed if taught by teacher
          * @return Course object.
          */
+    	if( course == null ) 
+    		return 0;
+    	
     	int i = 0;
     	int count = 0;
     	while( i < this.courses.length )

@@ -248,6 +248,8 @@ public class Course {
          *
          * @param professor Reference to Professor object to be made the lead Professor of the course.
          */
+    	if( professor == null )
+    		return;
     	this.professor.dropCourse(this);
     	this.professor = professor;
     }

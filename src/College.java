@@ -64,8 +64,16 @@ public class College {
          *
          * @param course A course object to be added to the College's array of courses.
          */
+    	if( course == null )
+    		return;
+    		
     	for( int i = 0; i < this.courses.length; i++)
     	{
+    		if( this.courses[i].getName().equals(course.getName()))
+    		{
+    			// can't add duplicates
+    			return;
+    		}
     		if( this.courses[i] == null )		// find the last open slot in the courses	
     		{
     			this.courses[i] = course;
@@ -86,7 +94,7 @@ public class College {
     		
     	for(int i = 0; i < this.professors.length; i++ )
     	{
-    		if( this.professors[i].equals(professor) )
+    		if( this.professors[i].getID() == professor.getID())
     		{
     			return;										// professor already exits 
     		}
@@ -110,7 +118,7 @@ public class College {
     		
     	for(int i = 0; i < this.teachers.length; i++ )
     	{
-    		if( this.teachers[i].equals(teacher) )
+    		if( this.teachers[i].getID() == teacher.getID() )
     		{
     			return;										// teacher already exits 
     		}
@@ -134,7 +142,7 @@ public class College {
     		
     	for(int i = 0; i < this.students.length; i++ )
     	{
-    		if( this.students[i].equals(student) )
+    		if( this.students[i].getID() == student.getID() )
     		{
     			return;										// student already exits 
     		}
@@ -173,7 +181,7 @@ public class College {
     	// removes student from the course list 
     	for( int i = 0; i < this.students.length; i ++ )
     	{
-	    	if(this.students[i].equals(student))
+	    	if(this.students[i].getID() == student.getID() )
 			{
 				this.students[i] = null;		// removes the course
 				
@@ -200,6 +208,9 @@ public class College {
     	// calculates the per course costs for teachers and professors
     	for( int i = 0; i < this.teachers.length; i++ )
     	{
+    		if( this.teachers[i] == null )
+    			break;
+    		
     		// this loop gets the teachers
     		for( int c = 0; c < this.courses.length; c++)
     		{
@@ -220,6 +231,9 @@ public class College {
     	for( int i = 0; i < this.professors.length; i++ )
     	{
     		// this loop gets the teachers
+    		if( this.professors[i] == null )
+    			break;
+    		
     		for( int c = 0; c < this.courses.length; c++)
     		{
     			// this loop gets each course to be compared
